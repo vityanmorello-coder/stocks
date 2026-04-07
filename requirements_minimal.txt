@@ -1,0 +1,6 @@
+# Minimal requirements for Vercel deployment
+# Only essential packages for marketing site
+
+# FastAPI for web server
+fastapi>=0.104.0
+uvicorn>=0.24.0
