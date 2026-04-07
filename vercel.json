@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "start_app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "start_app.py"
+    }
+  ],
+  "env": {
+    "PYTHON_VERSION": "3.11",
+    "PORT": "8501"
+  }
+}
