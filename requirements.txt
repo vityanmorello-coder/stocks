@@ -1,0 +1,51 @@
+# QuantumTrade Engine v3.1 - Requirements
+# Core dependencies for the trading platform
+
+# Streamlit Dashboard
+streamlit>=1.28.0
+streamlit-authenticator>=0.2.3
+
+# Database and Storage
+pymongo>=4.5.0
+pymongo[srv]>=4.5.0
+
+# Data Processing and Analysis
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Web and API
+requests>=2.31.0
+feedparser>=6.0.10
+websockets>=11.0.3
+aiohttp>=3.8.5
+
+# Machine Learning and AI
+scikit-learn>=1.3.0
+textblob>=0.17.1
+
+# Trading and Finance
+yfinance>=0.2.18
+ccxt>=4.0.0
+
+# Authentication and Security
+bcrypt>=4.0.1
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+
+# Visualization
+plotly>=5.15.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Utilities
+python-dotenv>=1.0.0
+tqdm>=4.65.0
+colorama>=0.4.6
+
+# Error Handling and Logging
+retrying>=1.3.4
+
+# Optional: For advanced features
+# statsmodels>=0.14.0
+# ta-lib>=0.4.25  # Requires manual installation on Windows

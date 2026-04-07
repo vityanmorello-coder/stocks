@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumTrade Engine v3.1 | Enterprise AI Trading Platform | Live Social Signals</title>
+    <meta name="description" content="Revolutionary AI trading platform with real-time social signals, WebSocket streaming, advanced analytics, and mobile-responsive design. Start trading smarter today.">
+    <meta name="keywords" content="AI trading, social signals, algorithmic trading, real-time analytics, WebSocket streaming, portfolio analytics, backtesting, mobile trading">
+    <meta property="og:title" content="QuantumTrade Engine v3.1 - Enterprise AI Trading Platform">
+    <meta property="og:description" content="Revolutionary AI trading with real-time social signals, WebSocket streaming, and advanced analytics">
+    <meta property="og:image" content="https://your-domain.com/quantumtrade-og-image.jpg">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg-primary:#09090b;
+            --bg-secondary:#111114;
+            --bg-card:#18181b;
+            --bg-card-hover:#1f1f23;
+            --border:#27272a;
+            --border-accent:rgba(59,130,246,0.3);
+            --text-primary:#fafafa;
+            --text-secondary:#a1a1aa;
+            --text-muted:#71717a;
+            --accent:#3b82f6;
+            --accent-hover:#2563eb;
+            --accent-glow:rgba(59,130,246,0.15);
+            --green:#10b981;
+            --green-muted:rgba(16,185,129,0.1);
+            --red:#ef4444;
+            --red-muted:rgba(239,68,68,0.1);
+            --gold:#f59e0b;
+        }
+        body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg-primary);color:var(--text-primary);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+        .container{max-width:1200px;margin:0 auto;padding:0 24px}
+        
+        /* NAV */
+        nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(9,9,11,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;height:64px}
+        .nav-logo{font-size:1.1rem;font-weight:700;letter-spacing:-0.5px;color:var(--text-primary)}
+        .nav-logo span{color:var(--accent)}
+        .nav-links{display:flex;gap:32px;align-items:center}
+        .nav-links a{color:var(--text-secondary);text-decoration:none;font-size:0.875rem;font-weight:500;transition:color 0.2s}
+        .nav-links a:hover{color:var(--text-primary)}
+        .nav-cta{background:var(--accent);color:#fff;padding:8px 20px;border-radius:6px;font-weight:600;font-size:0.875rem;text-decoration:none;transition:all 0.2s}
+        .nav-cta:hover{background:var(--accent-hover);transform:translateY(-1px)}
+
+        /* HERO */
+        .hero{padding:160px 0 120px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);pointer-events:none}
+
+        /* LIVE TICKER */
+        .ticker-wrap{position:absolute;top:80px;left:0;width:100%;overflow:hidden;opacity:0.12;pointer-events:none;z-index:0}
+        .ticker-track{display:flex;gap:48px;animation:ticker-scroll 30s linear infinite;white-space:nowrap;width:max-content}
+        .ticker-item{display:flex;align-items:center;gap:8px;font-size:0.85rem;font-weight:600;letter-spacing:0.5px;font-family:'Courier New',monospace}
+        .ticker-item .sym{color:var(--text-primary)}
+        .ticker-item .price{color:var(--text-secondary)}
+        .ticker-item .change.up{color:var(--green)}
+        .ticker-item .change.down{color:var(--red)}
+        .ticker-item .arrow{font-size:0.7rem}
+        @keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+        .ticker-wrap-2{position:absolute;top:110px;left:0;width:100%;overflow:hidden;opacity:0.08;pointer-events:none;z-index:0}
+        .ticker-track-2{display:flex;gap:48px;animation:ticker-scroll-2 40s linear infinite;white-space:nowrap;width:max-content}
+        @keyframes ticker-scroll-2{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+
+        /* MINI CHART in hero */
+        .hero-chart{position:absolute;right:0;top:50%;transform:translateY(-50%);width:45%;height:300px;opacity:0.06;pointer-events:none;z-index:0}
+        .hero-chart svg{width:100%;height:100%}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:100px;font-size:0.8rem;color:var(--text-secondary);margin-bottom:24px;font-weight:500}
+        .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-dot 2s infinite}
+        @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.4}}
+        .hero h1{font-size:4rem;font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bottom:20px;max-width:800px}
+        .hero h1 span{background:linear-gradient(135deg,var(--accent),#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero-sub{font-size:1.2rem;color:var(--text-secondary);max-width:600px;line-height:1.7;margin-bottom:40px;font-weight:400}
+        .hero-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:8px;font-size:0.95rem;font-weight:600;text-decoration:none;transition:all 0.2s;cursor:pointer;border:none}
+        .btn-primary{background:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.3),0 0 0 1px rgba(59,130,246,0.3)}
+        .btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 4px 12px rgba(59,130,246,0.3)}
+        .btn-ghost{background:transparent;color:var(--text-secondary);border:1px solid var(--border)}
+        .btn-ghost:hover{color:var(--text-primary);border-color:var(--text-muted)}
+        .hero-stats{display:flex;gap:48px;margin-top:64px;padding-top:40px;border-top:1px solid var(--border)}
+        .hero-stat .value{font-size:2.5rem;font-weight:800;letter-spacing:-1px}
+        .hero-stat .value.green{color:var(--green)}
+        .hero-stat .value.blue{color:var(--accent)}
+        .hero-stat .value.gold{color:var(--gold)}
+        .hero-stat .label{font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px;font-weight:600}
+
+        /* SECTIONS COMMON */
+        .section{padding:100px 0}
+        .section-dark{background:var(--bg-secondary)}
+        .section-header{margin-bottom:64px}
+        .section-header .overline{font-size:0.8rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+        .section-header h2{font-size:2.5rem;font-weight:800;letter-spacing:-1px;margin-bottom:16px;line-height:1.15}
+        .section-header p{font-size:1.05rem;color:var(--text-secondary);max-width:560px;line-height:1.7}
+        .section-header.center{text-align:center}
+        .section-header.center p{margin:0 auto}
+
+        /* MODULES GRID */
+        .modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+        .module-card{background:var(--bg-primary);padding:32px;transition:background 0.2s}
+        .module-card:hover{background:var(--bg-card)}
+        .module-label{font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+        .module-card h3{font-size:1.15rem;font-weight:700;margin-bottom:8px;letter-spacing:-0.3px}
+        .module-card p{font-size:0.875rem;color:var(--text-secondary);line-height:1.6}
+        .module-tag{display:inline-block;margin-top:16px;padding:4px 10px;border-radius:4px;font-size:0.7rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+        .tag-core{background:var(--accent-glow);color:var(--accent)}
+        .tag-alpha{background:rgba(139,92,246,0.15);color:#8b5cf6}
+        .tag-risk{background:var(--green-muted);color:var(--green)}
+        .tag-safety{background:var(--red-muted);color:var(--red)}
+
+        /* ARCHITECTURE */
+        .arch-flow{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:48px;margin-top:48px;font-family:'Courier New',monospace}
+        .arch-row{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+        .arch-node{padding:8px 16px;background:var(--bg-primary);border:1px solid var(--border);border-radius:6px;font-size:0.8rem;color:var(--text-secondary);white-space:nowrap}
+        .arch-node.active{border-color:var(--accent);color:var(--accent)}
+        .arch-arrow{color:var(--text-muted);font-size:1.2rem}
+        .arch-divider{width:2px;height:24px;background:var(--border);margin:4px auto}
+
+        /* METRICS BAR */
+        .metrics-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:48px}
+        .metric-item{background:var(--bg-primary);padding:40px 32px;text-align:center}
+        .metric-item .number{font-size:3rem;font-weight:800;letter-spacing:-2px;line-height:1}
+        .metric-item .desc{font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:8px;font-weight:600}
+
+        /* COMPARISON */
+        .comparison{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+        .comp-col{padding:40px;border-radius:12px;border:1px solid var(--border)}
+        .comp-col.legacy{background:var(--bg-card)}
+        .comp-col.quantum{background:var(--bg-card);border-color:var(--accent)}
+        .comp-col h3{font-size:1.1rem;font-weight:700;margin-bottom:24px;letter-spacing:-0.3px}
+        .comp-col.legacy h3{color:var(--text-muted)}
+        .comp-col.quantum h3{color:var(--accent)}
+        .comp-item{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:0.95rem;color:var(--text-secondary)}
+        .comp-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;flex-shrink:0}
+        .comp-icon.bad{background:var(--red-muted);color:var(--red)}
+        .comp-icon.good{background:var(--green-muted);color:var(--green)}
+
+        /* RISK GRID */
+        .risk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+        .risk-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:24px;transition:all 0.2s}
+        .risk-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+        .risk-card h4{font-size:0.95rem;font-weight:600;margin-bottom:6px}
+        .risk-card p{font-size:0.8rem;color:var(--text-muted);line-height:1.5}
+
+        /* CONTACT */
+        .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-top:48px}
+        .contact-form{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:40px}
+        .contact-form h3{font-size:1.5rem;font-weight:700;margin-bottom:8px;letter-spacing:-0.5px}
+        .contact-form .sub{color:var(--text-muted);font-size:0.9rem;margin-bottom:32px}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;font-size:0.8rem;font-weight:600;color:var(--text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:0.95rem;font-family:inherit;transition:border-color 0.2s}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent)}
+        .form-group textarea{resize:vertical;min-height:100px}
+        .form-submit{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit}
+        .form-submit:hover{background:var(--accent-hover);transform:translateY(-1px)}
+        .enterprise-features .ef-item{display:flex;gap:16px;margin-bottom:28px}
+        .ef-check{width:24px;height:24px;background:var(--green-muted);color:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;margin-top:2px}
+        .ef-item h4{font-size:0.95rem;font-weight:600;margin-bottom:2px}
+        .ef-item p{font-size:0.85rem;color:var(--text-muted);line-height:1.5}
+        .client-types{margin-top:32px;padding:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px}
+        .client-types h4{font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:12px}
+        .client-types p{font-size:0.9rem;color:var(--text-secondary);line-height:1.8}
+
+        /* FEATURES GRID */
+        .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+        .feature-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:28px;transition:all 0.2s;position:relative;overflow:hidden}
+        .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),#8b5cf6);opacity:0;transition:opacity 0.2s}
+        .feature-card:hover{border-color:rgba(59,130,246,0.4);transform:translateY(-2px)}
+        .feature-card:hover::before{opacity:1}
+        .feature-icon{font-size:1.8rem;margin-bottom:12px}
+        .feature-card h4{font-size:1rem;font-weight:700;margin-bottom:6px;letter-spacing:-0.3px}
+        .feature-card p{font-size:0.85rem;color:var(--text-muted);line-height:1.6}
+        .feature-badge{display:inline-block;margin-top:12px;padding:3px 8px;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;background:var(--accent-glow);color:var(--accent)}
+        .feature-badge.new{background:rgba(16,185,129,0.12);color:var(--green)}
+
+        /* DB SECTION */
+        .db-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px;align-items:start}
+        .db-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:32px}
+        .db-card h3{font-size:1.1rem;font-weight:700;margin-bottom:20px;letter-spacing:-0.3px}
+        .db-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.875rem}
+        .db-row:last-child{border-bottom:none}
+        .db-row .key{color:var(--text-secondary)}
+        .db-row .val{font-weight:600;color:var(--text-primary);font-family:'Courier New',monospace;font-size:0.8rem}
+        .persist-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.875rem}
+        .persist-row:last-child{border-bottom:none}
+        .persist-row .icon-no{color:var(--red);font-weight:700}
+        .persist-row .icon-yes{color:var(--green);font-weight:700}
+        .persist-row .label{color:var(--text-secondary);flex:1}
+
+        /* DISCLAIMER & FOOTER */
+        .disclaimer-bar{padding:32px 0;background:var(--bg-secondary);border-top:1px solid var(--border)}
+        .disclaimer-bar p{font-size:0.8rem;color:var(--text-muted);text-align:center;max-width:700px;margin:0 auto;line-height:1.7}
+        footer{padding:40px 0;border-top:1px solid var(--border);display:flex;justify-content:center;align-items:center}
+        footer p{font-size:0.8rem;color:var(--text-muted)}
+        footer span{color:var(--accent)}
+
+        /* RESPONSIVE */
+        @media(max-width:900px){
+            .hero h1{font-size:2.5rem}
+            .modules-grid,.features-grid{grid-template-columns:1fr}
+            .comparison,.contact-grid,.db-grid{grid-template-columns:1fr}
+            .metrics-bar,.risk-grid{grid-template-columns:1fr 1fr}
+            .hero-stats{flex-wrap:wrap;gap:24px}
+            .nav-links{display:none}
+        }
+        @media(max-width:600px){
+            .metrics-bar,.risk-grid{grid-template-columns:1fr}
+            .hero h1{font-size:2rem}
+        }
+
+        /* SCROLL ANIM */
+        .reveal{opacity:0;transform:translateY(30px);transition:all 0.6s cubic-bezier(0.16,1,0.3,1)}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <div class="nav-logo">Quantum<span>Trade</span> Engine</div>
+        <div class="nav-links">
+            <a href="#technology">Technology</a>
+            <a href="#features">Platform</a>
+            <a href="#database">Database</a>
+            <a href="#risk">Risk</a>
+            <a href="#contact" class="nav-cta">Request Demo</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <!-- Live ticker line 1 -->
+    <div class="ticker-wrap">
+        <div class="ticker-track" id="ticker1"></div>
+    </div>
+    <!-- Live ticker line 2 (reverse) -->
+    <div class="ticker-wrap-2">
+        <div class="ticker-track-2" id="ticker2"></div>
+    </div>
+    <!-- Mini chart background -->
+    <div class="hero-chart">
+        <svg viewBox="0 0 600 300" preserveAspectRatio="none">
+            <polyline id="heroChartLine" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+            </linearGradient>
+            <polygon id="heroChartFill" fill="url(#chartGrad)"/>
+        </svg>
+    </div>
+    <div class="container" style="position:relative;z-index:1">
+        <div class="hero-badge"><span class="dot"></span> v3.0 &mdash; Now with cloud database persistence &amp; user authentication</div>
+        <h1>Algorithmic trading<br>built for <span>real markets.</span></h1>
+        <p class="hero-sub">QuantumTrade Engine is a 12-module adaptive intelligence platform with cloud database persistence, multi-user authentication, real-time signal alerts, and institutional risk management &mdash; all in one dashboard.</p>
+        <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary">Request Demo</a>
+            <a href="#technology" class="btn btn-ghost">View Technology</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="value green">100+</div>
+                <div class="label">Instruments</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value blue">12</div>
+                <div class="label">AI Modules</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value gold">7</div>
+                <div class="label">DB Collections</div>
+            </div>
+            <div class="hero-stat">
+                <div class="value green">&gt;2:1</div>
+                <div class="label">Risk / Reward</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TECHNOLOGY -->
+<section class="section section-dark" id="technology">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="overline">Technology</div>
+            <h2>12 Intelligence Modules.<br>One Unified System.</h2>
+            <p>Each module solves a specific problem in the trading pipeline. Together, they form an adaptive system that learns, protects capital, and executes with institutional precision.</p>
+        </div>
+        <div class="modules-grid reveal">
+            <div class="module-card">
+                <div class="module-label">Signal Generation</div>
+                <h3>QuantumScorer</h3>
+                <p>Multi-factor probabilistic scoring using trend alignment, volume confirmation, volatility context, and Fibonacci precision zones. Outputs a 0-100% probability, not binary signals.</p>
+                <span class="module-tag tag-core">CORE</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Price Action</div>
+                <h3>Market Structure Analyzer</h3>
+                <p>Institutional-grade structure detection: Break of Structure, Change of Character, liquidity zones, supply/demand imbalances, and order block identification.</p>
+                <span class="module-tag tag-core">CORE</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Machine Learning</div>
+                <h3>ML Pipeline</h3>
+                <p>Production GradientBoosting with TimeSeriesSplit validation, walk-forward testing, early stopping, and trading-specific evaluation metrics including Sharpe and profit factor.</p>
+                <span class="module-tag tag-core">CORE</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Microstructure</div>
+                <h3>Alpha Engine</h3>
+                <p>Detects order flow imbalances, liquidity sweeps, stop-loss hunting, fair value gaps, and fast displacement events. Adjusts signal confidence up to 1.3x when institutional patterns confirm.</p>
+                <span class="module-tag tag-alpha">ALPHA</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Classification</div>
+                <h3>Regime Model</h3>
+                <p>Classifies markets into 6 states: trending up/down, ranging, high/low volatility, and news-driven. Does not generate signals. Filters and adjusts existing signal confidence by regime.</p>
+                <span class="module-tag tag-alpha">ALPHA</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Position Sizing</div>
+                <h3>Portfolio Optimizer</h3>
+                <p>Risk parity allocation, volatility targeting at 15% annualized, correlation-aware sizing, and dynamic position scaling. Outputs mathematically optimal sizes per trade.</p>
+                <span class="module-tag tag-risk">RISK</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Self-Monitoring</div>
+                <h3>Drift Detector</h3>
+                <p>Monitors performance drift, feature distribution shift, and execution degradation in real-time. Automatically reduces position sizes on yellow alert. Halts trading on red.</p>
+                <span class="module-tag tag-safety">SAFETY</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Execution</div>
+                <h3>Execution Engine</h3>
+                <p>Realistic slippage modeling based on ATR, spread, and order size. Simulates latency, partial fills, and requotes. Tracks execution quality with an institutional efficiency score.</p>
+                <span class="module-tag tag-core">CORE</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Data Integrity</div>
+                <h3>Data Engine</h3>
+                <p>Dynamic spread modeling, Z-score and IQR anomaly detection, OHLCV normalization, outlier removal with interpolation, and data integrity validation before any analysis.</p>
+                <span class="module-tag tag-risk">RISK</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Event Protection</div>
+                <h3>News Filter</h3>
+                <p>Economic calendar with configurable buffer windows. Automatically reduces signal confidence during high-impact events like NFP, FOMC, and ECB decisions. Currency-pair aware.</p>
+                <span class="module-tag tag-safety">SAFETY</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Risk Management</div>
+                <h3>Portfolio Manager</h3>
+                <p>Multi-position portfolio heat tracking capped at 6%. Correlation-based position limits, asset class diversification enforcement, and maximum concurrent position control.</p>
+                <span class="module-tag tag-risk">RISK</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Analytics</div>
+                <h3>Trade Journal</h3>
+                <p>Logs 30+ features per trade. Comprehensive analytics by strategy, regime, session, and instrument. Feature importance analysis for winning trades. Full CSV/Excel export.</p>
+                <span class="module-tag tag-core">CORE</span>
+            </div>
+            <div class="module-card">
+                <div class="module-label">Social Intelligence</div>
+                <h3>Global Signals Engine</h3>
+                <p>Real-time Twitter/X, Reddit, RSS monitoring with FinBERT sentiment analysis, NER entity detection, and AI clustering. Converts social events into actionable trading signals.</p>
+                <span class="module-tag tag-alpha">ALPHA</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PERFORMANCE -->
+<section class="section" id="performance">
+    <div class="container">
+        <div class="section-header center reveal">
+            <div class="overline">Performance</div>
+            <h2>Engineered for Consistency</h2>
+            <p>We don't chase returns. We engineer systems that produce stable, repeatable edge across all market conditions.</p>
+        </div>
+        <div class="metrics-bar reveal">
+            <div class="metric-item">
+                <div class="number" style="color:var(--green)">90%</div>
+                <div class="desc">Win Rate Target</div>
+            </div>
+            <div class="metric-item">
+                <div class="number" style="color:var(--accent)">&gt;2:1</div>
+                <div class="desc">Risk / Reward</div>
+            </div>
+            <div class="metric-item">
+                <div class="number" style="color:var(--gold)">&lt;8%</div>
+                <div class="desc">Max Drawdown</div>
+            </div>
+            <div class="metric-item">
+                <div class="number" style="color:var(--green)">13</div>
+                <div class="desc">Active Modules</div>
+            </div>
+        </div>
+
+        <div class="comparison reveal">
+            <div class="comp-col legacy">
+                <h3>Traditional Trading Software</h3>
+                <div class="comp-item"><span class="comp-icon bad">&times;</span>Fixed indicator rules</div>
+                <div class="comp-item"><span class="comp-icon bad">&times;</span>Overfits historical data</div>
+                <div class="comp-item"><span class="comp-icon bad">&times;</span>No regime awareness</div>
+                <div class="comp-item"><span class="comp-icon bad">&times;</span>Ignores execution costs</div>
+                <div class="comp-item"><span class="comp-icon bad">&times;</span>No model degradation detection</div>
+                <div class="comp-item"><span class="comp-icon bad">&times;</span>Static position sizing</div>
+            </div>
+            <div class="comp-col quantum">
+                <h3>QuantumTrade Engine v3.0</h3>
+                <div class="comp-item"><span class="comp-icon good">&check;</span>Probabilistic AI scoring with ML</div>
+                <div class="comp-item"><span class="comp-icon good">&check;</span>Walk-forward validation, no leakage</div>
+                <div class="comp-item"><span class="comp-icon good">&check;</span>6-state regime classification</div>
+                <div class="comp-item"><span class="comp-icon good">&check;</span>Live drift detection with auto-halt</div>
+                <div class="comp-item"><span class="comp-icon good">&check;</span>Cloud database persistence</div>
+                <div class="comp-item"><span class="comp-icon good">&check;</span>Multi-user auth + admin panel</div>
+                <div class="comp-item"><span class="comp-icon good">&check;</span>Real-time signal alerts + sound</div>
+                <div class="comp-item"><span class="comp-icon good">&check;</span>100+ instruments, any searchable</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="section section-dark" id="architecture">
+    <div class="container">
+        <div class="section-header center reveal">
+            <div class="overline">Architecture</div>
+            <h2>End-to-End Intelligence Pipeline</h2>
+            <p>Every module feeds into the next. Every trade becomes training data for the next decision.</p>
+        </div>
+        <div class="arch-flow reveal">
+            <div class="arch-row">
+                <div class="arch-node active">Data Engine</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node active">Alpha Engine</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node active">Regime Model</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node active">QuantumScorer</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node active">Market Structure</div>
+            </div>
+            <div class="arch-divider"></div>
+            <div class="arch-row">
+                <div class="arch-node">ML Pipeline</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node">News Filter</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node">Portfolio Optimizer</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node">Drift Detector</div>
+            </div>
+            <div class="arch-divider"></div>
+            <div class="arch-row">
+                <div class="arch-node">Execution Engine</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node">Trade Journal</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node active">Feedback Loop</div>
+            </div>
+            <div class="arch-divider"></div>
+            <div class="arch-row">
+                <div class="arch-node active">Cloud Database</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node active">Auth + Sessions</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node">Signal Alerts</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node">Admin Panel</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RISK -->
+<section class="section" id="risk">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="overline">Risk Management</div>
+            <h2>Capital Preservation First.</h2>
+            <p>Seven layers of protection ensure that no single trade, event, or system failure can compromise your capital.</p>
+        </div>
+        <div class="risk-grid reveal">
+            <div class="risk-card">
+                <h4>Portfolio Heat Control</h4>
+                <p>Total portfolio risk capped at 6% of capital at all times. Automatically prevents new positions when limit is reached.</p>
+            </div>
+            <div class="risk-card">
+                <h4>Correlation Filtering</h4>
+                <p>Detects correlated positions and applies sizing penalties. Prevents concentration risk across similar instruments.</p>
+            </div>
+            <div class="risk-card">
+                <h4>Drift Auto-Halt</h4>
+                <p>If the drift detector scores above 0.7, all trading halts automatically. No manual intervention required.</p>
+            </div>
+            <div class="risk-card">
+                <h4>News Event Shield</h4>
+                <p>Reduces confidence by up to 70% during high-impact economic events. Configurable buffer windows before and after.</p>
+            </div>
+            <div class="risk-card">
+                <h4>Walk-Forward Validation</h4>
+                <p>Every ML model is validated on unseen future data. No training-testing overlap. No backtest illusions.</p>
+            </div>
+            <div class="risk-card">
+                <h4>Maximum Drawdown Limit</h4>
+                <p>Hard stop at 8% portfolio drawdown. System pauses and requires manual review before resuming operations.</p>
+            </div>
+            <div class="risk-card">
+                <h4>Session-Aware Sizing</h4>
+                <p>Position sizes adjust based on trading session. Asian session: reduced size. London-NY overlap: full allocation.</p>
+            </div>
+            <div class="risk-card">
+                <h4>Execution Quality Gate</h4>
+                <p>Monitors slippage, fill quality, and latency per trade. Alerts and reduces sizing if execution deteriorates.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DASHBOARD FEATURES -->
+<section class="section" id="features">
+    <div class="container">
+        <div class="section-header center reveal">
+            <div class="overline">Platform</div>
+            <h2>Everything in One Dashboard</h2>
+            <p>A complete trading terminal with real-time data, AI signals, persistent storage, and user management. Built for professionals.</p>
+        </div>
+        <div class="features-grid reveal">
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h4>Login & User Management</h4>
+                <p>Secure login with 7-day sessions. Admin creates users — no self-registration. Each user gets isolated data, settings, and trade history.</p>
+                <span class="feature-badge new">New</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h4>Cloud Database Persistence</h4>
+                <p>Positions, trades, alerts, capital settings, and selected symbols all survive page refreshes and server restarts. Backed by a secure cloud database.</p>
+                <span class="feature-badge new">New</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔔</div>
+                <h4>Real-Time Signal Alerts</h4>
+                <p>Visual banner + browser sound alert when AI finds a high-confidence signal. Configurable threshold 50–95%. Toast notifications. Alert history log.</p>
+                <span class="feature-badge new">New</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h4>Interactive Charts & TA</h4>
+                <p>Candlestick charts with EMA, Bollinger Bands, MACD, RSI, Volume. Technical analysis panel with 10-point composite score per instrument.</p>
+                <span class="feature-badge">Core</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h4>100+ Symbol Universe</h4>
+                <p>Search and monitor any instrument: Forex, Stocks, Indices, Crypto, Commodities. Real-time data from yfinance. Auto-loads on selection.</p>
+                <span class="feature-badge">Core</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h4>Timezone Aware</h4>
+                <p>All charts and timestamps display in your local timezone. Session detection: Asian, London, New York, Overlap — confidence adjusted per session.</p>
+                <span class="feature-badge">Core</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h4>Configurable Portfolio Capital</h4>
+                <p>Set your starting capital from €10 to €10,000,000. Updates broker balance, risk calculations, and position sizing in real-time. Saved per user.</p>
+                <span class="feature-badge new">New</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">social</div>
+                <h4>Global Social + Market Signals</h4>
+                <p>Real-time Twitter/X, Reddit, RSS monitoring with AI-powered sentiment analysis, entity detection, and trending topic clustering. Converts social events into actionable trading signals.</p>
+                <span class="feature-badge new">New</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">auto_refresh</div>
+                <h4>Auto-Refresh & Scanning</h4>
+                <p>Configurable auto-refresh from 10 to 120 seconds. Automatically rescans all instruments, updates prices, and rechecks signal quality on each cycle.</p>
+                <span class="feature-badge">Core</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👑</div>
+                <h4>Admin Control Panel</h4>
+                <p>Dedicated admin tab visible only to admin users. Create new accounts, view all users, monitor last login times and session counts in real-time.</p>
+                <span class="feature-badge new">New</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DATABASE PERSISTENCE -->
+<section class="section section-dark" id="database">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="overline">Data Persistence</div>
+            <h2>Your Data Survives Everything.</h2>
+            <p>A secure cloud database stores every trade, position, alert, and setting. Refresh the page, restart the server — your data is always there.</p>
+        </div>
+        <div class="db-grid reveal">
+            <div class="db-card">
+                <h3>Database Collections</h3>
+                <div class="db-row"><span class="key">users</span><span class="val">accounts, hashed passwords, roles</span></div>
+                <div class="db-row"><span class="key">sessions</span><span class="val">login tokens with TTL expiry</span></div>
+                <div class="db-row"><span class="key">settings</span><span class="val">capital, symbols, alert prefs</span></div>
+                <div class="db-row"><span class="key">positions</span><span class="val">open/closed trades with P&amp;L</span></div>
+                <div class="db-row"><span class="key">trades</span><span class="val">full trade history per user</span></div>
+                <div class="db-row"><span class="key">alerts</span><span class="val">signal alert history</span></div>
+                <div class="db-row"><span class="key">portfolio_snapshots</span><span class="val">daily equity curve data</span></div>
+            </div>
+            <div class="db-card">
+                <h3>What Survives a Refresh</h3>
+                <div class="persist-row"><span class="icon-no">✗</span><span class="label">Open positions</span><span style="color:var(--green);font-weight:600">✓ Saved</span></div>
+                <div class="persist-row"><span class="icon-no">✗</span><span class="label">Trade history</span><span style="color:var(--green);font-weight:600">✓ Saved</span></div>
+                <div class="persist-row"><span class="icon-no">✗</span><span class="label">Portfolio capital</span><span style="color:var(--green);font-weight:600">✓ Saved</span></div>
+                <div class="persist-row"><span class="icon-no">✗</span><span class="label">Selected symbols</span><span style="color:var(--green);font-weight:600">✓ Saved</span></div>
+                <div class="persist-row"><span class="icon-no">✗</span><span class="label">Alert history</span><span style="color:var(--green);font-weight:600">✓ Saved</span></div>
+                <div class="persist-row"><span class="icon-no">✗</span><span class="label">Login session</span><span style="color:var(--green);font-weight:600">✓ 7 days</span></div>
+                <div style="margin-top:20px;padding:16px;background:var(--bg-primary);border-radius:8px;border:1px solid var(--border)">
+                    <div style="font-size:0.75rem;color:var(--accent);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Security</div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.7">Passwords hashed with SHA-256 + unique salt. Session tokens are 64-byte cryptographically random strings. Database credentials stored in <code style="color:var(--accent);background:var(--bg-card);padding:1px 6px;border-radius:3px">.env</code> file, never in source code.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section section-dark" id="contact">
+    <div class="container">
+        <div class="section-header reveal">
+            <div class="overline">Get Started</div>
+            <h2>Request a Demo</h2>
+            <p>See QuantumTrade Engine in action. Our team will walk you through the platform and discuss deployment for your operation.</p>
+        </div>
+        <div class="contact-grid reveal">
+            <div class="contact-form">
+                <h3>Contact Sales</h3>
+                <p class="sub">Fill out the form and we'll respond within 24 hours.</p>
+                <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" required placeholder="John Smith">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" required placeholder="john@company.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Company / Fund Name</label>
+                        <input type="text" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label>Trading Capital Range</label>
+                        <select>
+                            <option value="">Select range</option>
+                            <option>$10,000 - $50,000</option>
+                            <option>$50,000 - $250,000</option>
+                            <option>$250,000 - $1,000,000</option>
+                            <option>$1,000,000+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea placeholder="Tell us about your trading operation..."></textarea>
+                    </div>
+                    <button type="submit" class="form-submit">Request Demo & Pricing</button>
+                </form>
+            </div>
+
+            <div class="enterprise-features">
+                <div class="ef-item">
+                    <div class="ef-check">&check;</div>
+                    <div>
+                        <h4>Full Platform Access</h4>
+                        <p>All 12 intelligence modules, integrated dashboard, and real-time analytics.</p>
+                    </div>
+                </div>
+                <div class="ef-item">
+                    <div class="ef-check">&check;</div>
+                    <div>
+                        <h4>Dedicated Technical Support</h4>
+                        <p>Priority support from our engineering team. Direct access for system optimization.</p>
+                    </div>
+                </div>
+                <div class="ef-item">
+                    <div class="ef-check">&check;</div>
+                    <div>
+                        <h4>Custom Broker Integration</h4>
+                        <p>We integrate with your existing broker API and trading infrastructure.</p>
+                    </div>
+                </div>
+                <div class="ef-item">
+                    <div class="ef-check">&check;</div>
+                    <div>
+                        <h4>Onboarding & Training</h4>
+                        <p>Complete training on system operation, configuration, and performance monitoring.</p>
+                    </div>
+                </div>
+                <div class="ef-item">
+                    <div class="ef-check">&check;</div>
+                    <div>
+                        <h4>Continuous Updates</h4>
+                        <p>All future improvements, new modules, and security patches included.</p>
+                    </div>
+                </div>
+                <div class="ef-item">
+                    <div class="ef-check">&check;</div>
+                    <div>
+                        <h4>White-Label Available</h4>
+                        <p>Rebrand the platform under your fund name for client-facing deployment.</p>
+                    </div>
+                </div>
+                <div class="client-types">
+                    <h4>Designed For</h4>
+                    <p>Proprietary trading firms &middot; Hedge funds &middot; Asset managers &middot; Professional traders &middot; Quantitative research teams &middot; Family offices</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container" style="text-align:center">
+        <p>&copy; 2026 <span>QuantumTrade Engine</span>. All rights reserved. Institutional-grade algorithmic trading intelligence.</p>
+    </div>
+</footer>
+
+<script>
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+        e.preventDefault();
+        const t=document.querySelector(a.getAttribute('href'));
+        if(t)t.scrollIntoView({behavior:'smooth',block:'start'})
+    })
+});
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Nav background
+window.addEventListener('scroll',()=>{
+    document.querySelector('nav').style.background=
+        window.scrollY>50?'rgba(9,9,11,0.95)':'rgba(9,9,11,0.85)'
+});
+
+// LIVE STOCK TICKER
+const stocks=[
+    {sym:'AAPL',price:198.45,up:true},{sym:'MSFT',price:428.12,up:true},
+    {sym:'GOOGL',price:176.89,up:false},{sym:'AMZN',price:185.34,up:true},
+    {sym:'NVDA',price:892.56,up:true},{sym:'TSLA',price:245.78,up:false},
+    {sym:'META',price:502.14,up:true},{sym:'JPM',price:198.67,up:true},
+    {sym:'V',price:278.92,up:false},{sym:'BRK.B',price:412.30,up:true},
+    {sym:'EUR/USD',price:1.0847,up:false},{sym:'GBP/USD',price:1.2634,up:true},
+    {sym:'XAU/USD',price:2341.50,up:true},{sym:'USD/JPY',price:151.23,up:false},
+    {sym:'BTC/USD',price:67845,up:true},{sym:'ETH/USD',price:3456.78,up:true},
+    {sym:'SPY',price:512.89,up:true},{sym:'QQQ',price:438.67,up:true},
+    {sym:'DIA',price:389.45,up:false},{sym:'VIX',price:14.32,up:false},
+];
+function buildTicker(items){
+    return items.map(s=>{
+        const ch=s.up?('+'+((Math.random()*3)+0.1).toFixed(2)):('-'+((Math.random()*3)+0.1).toFixed(2));
+        const pct=s.up?('+'+((Math.random()*2)+0.05).toFixed(2)+'%'):('-'+((Math.random()*2)+0.05).toFixed(2)+'%');
+        const arrow=s.up?'&#9650;':'&#9660;';
+        return `<div class="ticker-item"><span class="sym">${s.sym}</span><span class="price">${s.price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span><span class="change ${s.up?'up':'down'}"><span class="arrow">${arrow}</span> ${ch} (${pct})</span></div>`;
+    }).join('');
+}
+const t1=document.getElementById('ticker1');
+const t2=document.getElementById('ticker2');
+const set1=stocks.slice(0,10);const set2=stocks.slice(10);
+t1.innerHTML=buildTicker(set1)+buildTicker(set1);
+t2.innerHTML=buildTicker(set2)+buildTicker(set2);
+
+// ANIMATED CHART LINE
+(function(){
+    const pts=80;const data=[];let v=150;
+    for(let i=0;i<pts;i++){v+=((Math.random()-0.45)*12);v=Math.max(40,Math.min(260,v));data.push(v)}
+    const step=600/(pts-1);
+    const linePoints=data.map((y,i)=>`${i*step},${y}`).join(' ');
+    document.getElementById('heroChartLine').setAttribute('points',linePoints);
+    const fillPoints=`0,300 ${linePoints} 600,300`;
+    document.getElementById('heroChartFill').setAttribute('points',fillPoints);
+
+    // Animate: shift data left and add new point
+    setInterval(()=>{
+        data.shift();
+        v+=((Math.random()-0.45)*12);v=Math.max(40,Math.min(260,v));
+        data.push(v);
+        const lp=data.map((y,i)=>`${i*step},${y}`).join(' ');
+        document.getElementById('heroChartLine').setAttribute('points',lp);
+        document.getElementById('heroChartFill').setAttribute('points',`0,300 ${lp} 600,300`);
+    },400);
+})();
+
+// TICKER PRICE UPDATES (simulate live movement)
+setInterval(()=>{
+    document.querySelectorAll('.ticker-item').forEach(el=>{
+        if(Math.random()>0.7){
+            const priceEl=el.querySelector('.price');
+            if(priceEl){
+                let p=parseFloat(priceEl.textContent.replace(/,/g,''));
+                p+=(Math.random()-0.5)*0.5;
+                priceEl.textContent=p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+            }
+        }
+    });
+},2000);
+
+// Form
+document.getElementById('contactForm').addEventListener('submit',e=>{
+    const btn=e.target.querySelector('.form-submit');
+    btn.textContent='Sending...';
+    btn.disabled=true;
+    
+    // Formspree will handle the submission
+    setTimeout(()=>{
+        btn.textContent='Message Sent Successfully!';
+        btn.style.background='var(--green)';
+        
+        // Reset form after 3 seconds
+        setTimeout(()=>{
+            btn.textContent='Request Demo & Pricing';
+            btn.style.background='';
+            btn.disabled=false;
+            e.target.reset();
+        },3000);
+    },2000);
+});
+</script>
+</body>
+</html>

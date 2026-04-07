@@ -1,0 +1,45 @@
+# Environment files
+.env
+.env.*
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local utilities (should not be committed)
+utils/
+check_users.py
+debug_login.py
+fix_user_fields.py
+reset_password.py
+unlock_account.py
+
+# Local data and logs
+*.log
+*.json
+data/
+logs/
+.cache/
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+requirements_installed.flag
